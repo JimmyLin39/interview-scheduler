@@ -1,9 +1,11 @@
 import React from 'react'
+import axios from 'axios'
 import 'components/Appointment/styles.scss'
 import Header from 'components/Appointment/Header'
 import Show from 'components/Appointment/Show'
 import Empty from 'components/Appointment/Empty'
 import Form from 'components/Appointment/Form'
+import Status from 'components/Appointment/Status'
 import useVisualMode from 'hooks/useVisualMode'
 
 export default function Appointment(props) {
@@ -18,11 +20,26 @@ export default function Appointment(props) {
   function onAdd() {
     transition(CREATE)
   }
-  function onSave() {
-    transition(SAVING)
-  }
   function onCancel() {
     back()
+  }
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    }
+    transition(SAVING)
+    props.bookInterview(props.id, interview)
+    axios
+      .put(`/api/appointments/${props.id}`, {
+        interview
+      })
+      .then(response => {
+        transition(SHOW)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
   return (
     <article className="appointment">
@@ -35,9 +52,13 @@ export default function Appointment(props) {
         />
       )}
       {mode === CREATE && (
-        <Form interviewers={[]} onSave={onSave} onCancel={onCancel} />
+        <Form
+          interviewers={props.interviewers}
+          onSave={save}
+          onCancel={onCancel}
+        />
       )}
-      {mode}
+      {mode === SAVING && <Status message="Saving" />}
     </article>
   )
 }
