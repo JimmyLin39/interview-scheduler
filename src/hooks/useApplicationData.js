@@ -27,7 +27,18 @@ export default function useApplicationData() {
           ...state.appointments,
           [id]: appointment
         }
-        state = { ...state, appointments }
+        // update remaining spots
+        let days = [...state.days]
+        days = days.map(day => {
+          if (day.id !== id) {
+            return day
+          }
+          return {
+            ...day,
+            spots: interview === null ? day.spots + 1 : day.spots - 1
+          }
+        })
+        state = { ...state, appointments, days }
         return state
       }
       default:
