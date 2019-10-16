@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 
 import {
   render,
@@ -122,5 +123,47 @@ describe('Application', () => {
     )
 
     expect(getByText(day, '1 spot remaining')).toBeInTheDocument()
+  })
+  it('shows the save error when failing to save an appointment', async () => {
+    const { container, getByDisplayValue } = render(<Application />)
+    await waitForElement(() => getByText(container, 'Archie Cohen'))
+
+    const appointment = getAllByTestId(container, 'appointment').find(
+      appointment => queryByText(appointment, 'Archie Cohen')
+    )
+    fireEvent.click(queryByAltText(appointment, 'Edit'))
+
+    fireEvent.change(getByDisplayValue('Archie Cohen'), {
+      target: { value: 'Lydia Miller-Jones' }
+    })
+
+    // mock error
+    axios.put.mockRejectedValueOnce()
+    fireEvent.click(getByText(appointment, 'Save'))
+    expect(getByText(appointment, 'Saving')).toBeInTheDocument()
+
+    await waitForElement(() => queryByText(appointment, 'Error'))
+    fireEvent.click(queryByAltText(appointment, 'Close'))
+    expect(getByText(appointment, 'Archie Cohen')).toBeInTheDocument()
+  })
+  it('shows the delete error when failing to delete an existing appointment', async () => {
+    const { container } = render(<Application />)
+    await waitForElement(() => getByText(container, 'Archie Cohen'))
+
+    const appointment = getAllByTestId(container, 'appointment').find(
+      appointment => queryByText(appointment, 'Archie Cohen')
+    )
+    fireEvent.click(queryByAltText(appointment, 'Delete'))
+
+    axios.delete.mockRejectedValueOnce()
+    expect(getByText(appointment, 'Delete the appointment')).toBeInTheDocument()
+
+    fireEvent.click(getByText(appointment, 'Confirm'))
+
+    expect(getByText(appointment, 'Deleting')).toBeInTheDocument()
+
+    await waitForElement(() => queryByText(appointment, 'Error'))
+    fireEvent.click(queryByAltText(appointment, 'Close'))
+    expect(getByText(appointment, 'Archie Cohen')).toBeInTheDocument()
   })
 })
