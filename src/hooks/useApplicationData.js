@@ -30,7 +30,11 @@ export default function useApplicationData() {
         // update remaining spots
         let days = [...state.days]
         days = days.map(day => {
-          if (!day.appointments.includes(id)) {
+          // skip
+          if (
+            (state.appointments[id].interview !== null && interview !== null) ||
+            !day.appointments.includes(id)
+          ) {
             return day
           }
           return {
