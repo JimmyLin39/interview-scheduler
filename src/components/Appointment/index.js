@@ -46,7 +46,6 @@ export default function Appointment(props) {
       })
       .catch(error => {
         transition(ERROR_SAVE, true)
-        console.log(error)
       })
   }
   function cancelAppointment() {
@@ -59,7 +58,6 @@ export default function Appointment(props) {
       })
       .catch(error => {
         transition(ERROR_DELETE, true)
-        console.log(error)
       })
   }
   return (
