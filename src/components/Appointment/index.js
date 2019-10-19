@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import 'components/Appointment/styles.scss'
 import Header from 'components/Appointment/Header'
@@ -24,6 +24,14 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   )
+  useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+      transition(SHOW)
+    }
+    if (props.interview === null && mode === SHOW) {
+      transition(EMPTY)
+    }
+  }, [transition, mode, props.interview])
   function onAdd() {
     transition(CREATE)
   }
@@ -64,7 +72,7 @@ export default function Appointment(props) {
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={onAdd} />}
-      {mode === SHOW && (
+      {mode === SHOW && props.interview && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
