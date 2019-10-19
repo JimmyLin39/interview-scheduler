@@ -13,8 +13,16 @@ export default function useApplicationData() {
     appointments: {},
     interviewers: {}
   })
-  // console.log(state)
   useEffect(() => {
+    // use websocket to update changes with different clients
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
+    webSocket.onopen = () => {
+      webSocket.onmessage = event => {
+        const { id, interview } = JSON.parse(event.data)
+        dispatch({ type: SET_INTERVIEW, id, interview })
+      }
+    }
+
     Promise.all([
       Promise.resolve(axios.get('/api/days')),
       Promise.resolve(axios.get('/api/appointments')),
