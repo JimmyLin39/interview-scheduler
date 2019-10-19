@@ -1,9 +1,6 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - master
     docker:
       - image: circleci/node:10.16
 
@@ -49,6 +46,7 @@ workflows:
       - deploy:
           filters:
             branches:
+              only: master
               ignore: production
           requires:
             - build
