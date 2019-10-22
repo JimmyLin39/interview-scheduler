@@ -5,6 +5,7 @@ import {
   render,
   cleanup,
   waitForElement,
+  waitForElementToBeRemoved,
   getByAltText,
   getByPlaceholderText
 } from '@testing-library/react'
@@ -22,6 +23,11 @@ import Application from 'components/Application'
 afterEach(cleanup)
 
 describe('Application', () => {
+  it('display loading screen when data not loaded', async () => {
+    const { getByText, queryByText } = render(<Application />)
+    expect(getByText('Loading')).toBeInTheDocument()
+    await waitForElementToBeRemoved(() => queryByText('Loading'))
+  })
   it('changes the schedule when a new day is selected', async () => {
     const { getByText } = render(<Application />)
 
@@ -61,7 +67,7 @@ describe('Application', () => {
 
   it('loads data, cancels an interview and increases the spots remaining for Monday by 1', async () => {
     // 1. Render the Application.
-    const { container, debug } = render(<Application />)
+    const { container } = render(<Application />)
 
     // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, 'Archie Cohen'))
@@ -93,7 +99,7 @@ describe('Application', () => {
   })
   it('loads data, edits an interview and keeps the spots remaining for Monday the same', async () => {
     // 1. Render the Application.
-    const { container, debug, getByDisplayValue } = render(<Application />)
+    const { container, getByDisplayValue } = render(<Application />)
 
     // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, 'Archie Cohen'))

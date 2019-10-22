@@ -4,6 +4,7 @@ import 'components/Application.scss'
 import DayList from 'components/DayList'
 import Appointment from 'components/Appointment'
 import useApplicationData from 'hooks/useApplicationData'
+import Status from 'components/Appointment/Status'
 import {
   getAppointmentsForDay,
   getInterview,
@@ -13,6 +14,7 @@ import {
 export default function Application(props) {
   const { state, setDay, bookInterview, cancelInterview } = useApplicationData()
   const { day, days } = state
+  const loading = Object.keys(state.appointments).length === 0
 
   const interviewers = getInterviewersForDay(state, day)
   const appointments = getAppointmentsForDay(state, day).map(appointment => {
@@ -43,8 +45,9 @@ export default function Application(props) {
         </nav>
       </section>
       <section className="schedule">
+        {loading && <Status message="Loading" />}
         {appointments}
-        <Appointment key="last" time="5pm" />
+        {!loading && <Appointment key="last" time="5pm" />}
       </section>
     </main>
   )
