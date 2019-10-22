@@ -29,3 +29,14 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Running Cypress Visual Testbed
+
+```sh
+npm run cypress
+```
+
+## Sever
+
+The server side code is available at https://github.com/JimmyLin39/scheduler-api
+
