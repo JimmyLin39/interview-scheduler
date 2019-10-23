@@ -4,7 +4,7 @@ A React application that allows users book and cancel interviews. Combine a conc
 ## Deployment
 
 - Live app on Netlify: https://interview-scheduler-oct-2019.netlify.com/
-- The server side is deployed to Heroku
+- The server side is deployed to Heroku, it may take a while to boost up the server.
 - Intergrated with CircleCI to manage continuous intergrateion process
 - Utilized Netlify to serve static client assets and manage continuous deployment process
 
